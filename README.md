@@ -1,4 +1,4 @@
-<img src="images/banner.svg" width="1900" height="200" alt="Description">
+<img src="images/banner.svg" width="1000" height="200" alt="Meta Scrambler">
 
 # Meta Scrambler
 
@@ -106,6 +106,18 @@ meta-scrambler/
 
 - Add XLSX metadata removal support
 - Add PPTX metadata removal support
+
+### v0.40 (Planned)
+
+- Device Augmentation - Replace real camera hardware info with fake data to throw off device fingerprinting
+  - Random generation - Generate randomized camera brands, models, and serial numbers
+  - Custom values - Users can input specific fake values to customize device identity
+
+### v0.50 (Planned)
+
+- Batch processing - Handle multiple files at once with queue UI
+- Metadata viewer - Inspect metadata before deciding to clean
+- Custom presets - Save different removal/augmentation profiles
 
 ### v1.0 (Planned)
 
