@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meta Scrambler</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        width: 100%;
+        min-width: 280px;
+        max-width: 420px;
+        min-height: 300px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #1a1a2e;
+        color: #eee;
+        padding: 8px;
+      }
+      h1 {
+        font-size: 20px;
+        margin-bottom: 16px;
+        color: #ffd700;
+        text-align: center;
+      }
+      .drop-zone {
+        border: 2px dashed #444;
+        border-radius: 8px;
+        padding: 32px 16px;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+        margin-bottom: 16px;
+      }
+      .drop-zone:hover,
+      .drop-zone.dragover {
+        border-color: #00d9ff;
+        background: rgba(0, 217, 255, 0.05);
+      }
+      .drop-zone p {
+        color: #888;
+        font-size: 14px;
+      }
+      .drop-zone .icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+      #file-input {
+        display: none;
+      }
+      .file-list {
+        margin-bottom: 16px;
+      }
+      .file-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #252540;
+        padding: 10px 12px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+      }
+      .file-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        overflow: hidden;
+      }
+      .file-icon {
+        font-size: 20px;
+      }
+      .file-name {
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+      }
+      .file-size {
+        font-size: 11px;
+        color: #666;
+      }
+      .remove-btn {
+        background: none;
+        border: none;
+        color: #ff4757;
+        cursor: pointer;
+        font-size: 18px;
+        padding: 4px 8px;
+      }
+      .remove-btn:hover {
+        color: #ff6b7a;
+      }
+      .process-btn {
+        width: 100%;
+        padding: 12px;
+        background: #00d9ff;
+        color: #1a1a2e;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        margin-bottom: 8px;
+      }
+      .process-btn:hover {
+        opacity: 0.9;
+      }
+      .process-btn:disabled {
+        background: #444;
+        cursor: not-allowed;
+      }
+      .output {
+        display: none;
+        background: #252540;
+        border-radius: 8px;
+        padding: 16px;
+      }
+      .output.show {
+        display: block;
+      }
+      .output-header {
+        font-size: 14px;
+        color: #00d9ff;
+        margin-bottom: 12px;
+      }
+      .output-file {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        font-size: 13px;
+      }
+      .output-buttons {
+        display: flex;
+        gap: 8px;
+      }
+      .output-btn {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+      .output-btn:hover {
+        opacity: 0.9;
+      }
+      .clipboard-btn {
+        background: #4ade80;
+        color: #1a1a2e;
+      }
+      .download-btn {
+        background: #a78bfa;
+        color: #1a1a2e;
+      }
+      .status {
+        text-align: center;
+        padding: 8px;
+        font-size: 13px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        display: none;
+      }
+      .status.show {
+        display: block;
+      }
+      .status.success {
+        background: rgba(74, 222, 128, 0.2);
+        color: #4ade80;
+      }
+      .status.error {
+        background: rgba(255, 71, 87, 0.2);
+        color: #ff4757;
+      }
+      .status.processing {
+        background: rgba(0, 217, 255, 0.2);
+        color: #00d9ff;
+      }
+      .settings-link {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: #252540;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #888;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          color 0.2s;
+        text-align: center;
+        margin-top: 12px;
+      }
+      .settings-link:hover {
+        background: #353555;
+        color: #ffd700;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Meta Scrambler</h1>
+
+    <div class="drop-zone" id="drop-zone">
+      <div class="icon">📁</div>
+      <p>Drop files here or click to select</p>
+      <p style="font-size: 12px; margin-top: 4px">Supports all file types</p>
+    </div>
+    <input type="file" id="file-input" multiple />
+
+    <div class="file-list" id="file-list"></div>
+
+    <button class="process-btn" id="process-btn" disabled>
+      Remove Metadata
+    </button>
+
+    <div class="status" id="status"></div>
+
+    <div class="output" id="output">
+      <div class="output-header">✓ Metadata Removed</div>
+      <div class="output-file">
+        <span id="output-name"></span>
+        <span id="output-size" style="color: #666; font-size: 12px"></span>
+      </div>
+      <div class="output-buttons">
+        <button class="output-btn clipboard-btn" id="clipboard-btn">
+          Copy to Clipboard
+        </button>
+        <button class="output-btn download-btn" id="download-btn">
+          Download
+        </button>
+      </div>
+    </div>
+
+    <button id="settings-link" class="settings-link">⚙️ Settings</button>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

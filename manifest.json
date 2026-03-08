@@ -1,0 +1,11 @@
+{
+  "name": "Meta Scrambler",
+  "description": "Meta Scrambler is a Chrome extension that removes metadata from files before sharing. When you take a photo or create a document, hidden information is embedded in the file that can reveal sensitive details about you, your location, and your devices.",
+  "version": "0.10",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html"
+  },
+  "options_page": "options.html",
+  "permissions": ["storage"]
+}
